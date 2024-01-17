@@ -36,7 +36,7 @@ app.use(session({
   store: MongoStore.create({ 
     mongoUrl: 'mongodb://localhost:27017/expense_db2',
   }),
-  cookie: { secure: false }, // You can add additional cookie options as needed
+  cookie: { secure: false }, // cookie options
 }));
 
 app.set('view engine', 'ejs');
@@ -71,8 +71,8 @@ app.get('/register', authController.getRegister);
 app.post('/register', authController.postRegister);
 
 app.get('/home', (req, res) => {
-  // Your logic for rendering the home page
-  res.render('home'); // Adjust this based on your template rendering setup
+  
+  res.render('home'); 
 });
 
 
@@ -87,14 +87,14 @@ app.get('/settings', (req, res) => {
 });
 
 app.get('/userRole', (req, res) => {
-  // Your logic for rendering the home page
-  res.render('userRole' ,{errorMessage:'' }); // Adjust this based on your template rendering setup
+  
+  res.render('userRole' ,{errorMessage:'' }); 
 });
 
 
 app.get('/about', (req, res) => {
-  // Your logic for rendering the home page
-  res.render('about'); // Adjust this based on your template rendering setup
+ 
+  res.render('about'); 
 });
 
 // Set up routes
@@ -105,8 +105,7 @@ app.use('/userAccess', userAccessRoutes);
 app.post('/signin', (req, res) => {
     const { roleid, rolename } = req.body;
 
-    // Add your authentication logic here
-    // For simplicity, let's assume the roleid and rolename are valid
+    
     if (roleid && rolename) {
         // Set a session variable to indicate that the user is authenticated
         req.session.isAuthenticated = true;
