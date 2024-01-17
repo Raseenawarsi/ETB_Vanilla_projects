@@ -1,0 +1,192 @@
+<!-- reports.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+    <title>Document</title>
+</head>
+
+<body>
+    <nav>
+        <h5>Expense</h5>
+        <ul>
+            <li><a href="/logout">Logout</a></li>
+        </ul>
+    </nav>
+
+    <div id="sidebar" class="closed">
+        <% if (loggedIn === 'user') { %>
+        <a href="#" id="adminv">My View</a>
+        <ul id="adminop" style="display: none;">
+        <li><a href="/home"><img src="../images/home3.png" alt="Etb Image" style="max-width: 15px; max-height: 18px;"> &nbsp; Home</img> </a></li>
+        <li><a href="/expenses"><img src="../images/bill1.png" alt="Etb Image" style="max-width: 15px; max-height: 18px;"> &nbsp; Expenses</img> </a></li>
+        <li><a href="/reports"><img src="../images/report3.png" alt="Etb Image" style="max-width: 15px; max-height: 18px;"> &nbsp;Reports</img></a></li>
+        <li><a href="/advance"><img src="../images/wallet2.png" alt="Etb Image" style="max-width: 15px; max-height: 18px;"> &nbsp;Advance</img></a></li>
+        <li><a href="/approvals"><img src="../images/approval.png" alt="Etb Image" style="max-width: 15px; max-height: 18px;"> &nbsp;Approvals</img></a></li>
+        <li><a href="/analytics"><img src="../images/analytics.png" alt="Etb Image" style="max-width: 15px; max-height: 18px;"> &nbsp;Analytics</img></a></li>
+        <li><a href="/settings"><img src="../images/setting.png" alt="Etb Image" style="max-width: 15px; max-height: 18px;"> &nbsp;Setting</img></a> </li>
+        </ul>
+        <% } else if (loggedIn === 'admin') { %>
+          <ul>
+          <li> Admin View</li>
+          <li><a href="/userRole"><img src="../images/userRole.png" alt="Etb Image" style="max-width: 25px; max-height: 18px;"> &nbsp;User Role</img></a></li>
+          <li><a href="/expApprovals"><img src="../images/approval.png" alt="Etb Image" style="max-width: 15px; max-height: 18px;"> &nbsp;Expense Approvals</img> </a></li>
+          <li><a href="/approvalTabs"><img src="../images/approved.png" alt="Etb Image" style="max-width: 25px; max-height: 18px;"> &nbsp;Approvals Tab</img> </a></li>
+        </ul>
+      <% } %>
+    </div>
+    <div id="menu-toggle">&#9776;</div>
+
+    <!--Body-->
+    <div class="container-fluid2 tbl-container" id="content">
+        <div class="row" style="margin-top: 40px;">
+            <h2 style="font-weight:bold">REPORT</h2>
+            <img src="../images/report5.png" alt="report Image" style="width: 15%; height: 30%;">
+            <div class="col-md-4" id="report">
+                <strong><p style="font-size: 25px">Discover Reports.</p></strong>
+                <p>Effortlessly generate and analyze reports for insightful business intelligence. Access essential data and metrics to make informed decisions swiftly.</p>
+                <!-- Button to Open Expenses Form in Modal -->
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newReportModal">+ New Report</button>
+            </div>
+
+            <!-- Modal -->			
+            <div class="modal fade" id="newReportModal" tabindex="-1" aria-labelledby="newReportModalLabel" aria-hidden="true">
+                <div class="modal-dialog" style="max-width: 360px;">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="newReportModalLabel">New Report</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <!-- Your form fields go here -->
+                            <form class="Report" id="newReportForm" action="/report/submit-report" method="POST" enctype="multipart/form-data">
+                                <div class="mb-3 row" >
+                                  <label for="report_name" class="col-sm-3 col-form-label">Report Name</label>
+                                  <div class="col-sm-9">
+                                      <input type="text" class="form-control" id="report_name" name="report_name" required>
+                                  </div>
+                                </div>
+	                
+                                <div class="mb-3 row">
+                                    <label for="business_purpose" class="col-sm-3 col-form-label">Business Purpose</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" id="business_purpose" name="business_purpose" required>							
+                                    </div>
+                                </div>
+					            <div class="mb-3 row">
+                                    <label for="trip" class="col-sm-3 col-form-label">Trip</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" id="trip" name="trip" required>
+                                    </div>
+                                </div>					  
+                                <!-- Submit and Cancel Buttons -->
+                                <button type="submit" class="btn btn-primary">Save</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="font-weight:bold; margin-top: 40px; margin-bottom: None;">Report Details:</h3>
+            <div class="row tbl-fixed">
+                <div class="col-md-12">
+                                       
+                      <!-- Reports Table -->
+                        <table class="table mt-4">
+                            <thead>
+                            <tr>
+                                <th scope="col">Report Name</th>
+                                <th scope="col">Business Purpose</th>
+                                <th scope="col">Trip</th>
+                                <th scope="col">Created By</th>
+                                <th scope="col">Creation Date</th>
+                                <th scope="col">Last Updated By</th>
+                                <th scope="col">Last Updated Date</th>
+                                <th scope="col">Last Update Login</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <% for (const report of allReports) { %>
+                                <tr>
+                                <td><%= report.report_name %></td>
+                                <td><%= report.business_purpose %></td>
+                                <td><%= report.trip %></td>
+                                <td><%= report.created_by %></td>
+                                <td><%= report.creation_date ? report.creation_date.toISOString().split('T')[0] : 'N/A' %></td>
+                                <td><%= report.last_updated_by %></td>
+                                <td><%= report.last_updated_date ? report.last_updated_date.toISOString().split('T')[0] : 'N/A' %></td>
+                                <td><%= report.last_update_login %></td>
+                                </tr>
+                            <% } %>
+                            </tbody>
+                        </table>
+               </div>
+            </div>
+        </div>
+    </div>	 
+
+    <!-- Include Bootstrap JS and Popper.js -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"></script>
+	<script>
+        document.getElementById('menu-toggle').addEventListener('click', function () {
+            var sidebar = document.getElementById('sidebar');
+            var content = document.getElementById('content');
+            var adminList = document.getElementById('adminop');
+            var adminOptions = document.getElementById('adminOptions');
+ 
+            // Toggle the 'closed' class on the sidebar
+            sidebar.classList.toggle('closed');
+ 
+            // Toggle the 'open-sidebar' class on the content
+            content.classList.toggle('open-sidebar');
+ 
+            // Initially, hide adminOptions and show adminList
+            adminList.style.display = 'block';
+            adminOptions.style.display = 'none';
+        });
+ 
+        document.getElementById('adminView').addEventListener('click', function () {
+            var adminOptions = document.getElementById('adminOptions');
+            var adminList = document.getElementById('adminop');
+ 
+            // Hide admin list and display admin view list
+            adminList.style.display = 'none';
+            adminOptions.style.display = 'block';
+        });
+ 
+        document.getElementById('adminv').addEventListener('click', function () {
+            var adminOptions = document.getElementById('adminOptions');
+            var adminList = document.getElementById('adminop');
+ 
+            // Hide admin view list and display admin list
+            adminOptions.style.display = 'none';
+            adminList.style.display = 'block';
+        });
+    </script>
+		<script>
+                function newReport() {
+                    // Show the Record Advance form
+                    document.getElementById("newReport").style.display = "block";
+                }
+
+                function cancelRecord() {
+                    // Implement the logic to cancel and reset the form or navigate back
+                    console.log('Canceling record');
+
+                    // Reset the form
+                    document.getElementById("newReport").reset();
+
+                    // Hide the form
+                    document.getElementById("newReport").style.display = "none";
+                }
+            </script>
+            
+        
+</body>
+</html>

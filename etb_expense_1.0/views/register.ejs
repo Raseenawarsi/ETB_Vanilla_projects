@@ -1,0 +1,93 @@
+<!-- views/register.ejs -->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+    <title>Document</title>
+</head>
+
+<body>
+    
+    <nav>
+        <h5><img src="../images/icon1.png" alt="Etb Image" style="max-width: 20px; max-height: 35px;"> Expense</img></h5>
+        <ul>
+            <li><a href="/">Home</a></li>
+                <li><a href="/login">Login</a></li>
+                <li><a href="/register">Register</a></li>
+        </ul>
+    </nav>
+
+    <!--Body-->
+    <div class="container-fluid" id="backgroundimage">
+	  <div class="row">
+	    <div class="col-md-5 offset-md-3">
+        <div class="card" style="margin-top: 50px;">
+            <div class="card-header">
+                Register Form
+            </div>
+            <div class="card-body">
+                <div class="alert alert-danger<%= (error) ? '' : ' d-none' %>" role="alert">
+                    <%= error %>
+                </div>
+
+                 <form action="/register" method="POST" id="form">      <!-- /auth/register -->
+
+				    <div class="mb-3 row" >
+                        <label for="username" class="col-sm-3 col-form-label">User Name</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="username" name="username" required>
+                        </div>
+                    </div>
+	                
+                    <div class="mb-3 row">
+                        <label for="email" class="col-sm-3 col-form-label">Email Address</label>
+                        <div class="col-sm-9">
+                            <input type="email" class="form-control" id="email" name="email" required>
+							<div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+                        </div>
+                    </div>
+					<div class="mb-3 row">
+                        <label for="password" class="col-sm-3 col-form-label">Password</label>
+                        <div class="col-sm-9">
+                            <input type="password" class="form-control" id="password" name="password" required>
+                        </div>
+                    </div>
+					<div class="mb-3 row">
+                        <label for="passwordConfirm" class="col-sm-3 col-form-label">Confirm Password</label>
+                        <div class="col-sm-9">
+                            <input type="passwordConfirm" class="form-control" id="passwordConfirm" name="passwordConfirm" required>
+                        </div>
+                    </div>
+	                
+                    <div class="mb-3 row">
+                        <div class="col-sm-10">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+							<button type="button" class="btn btn-primary" id="cancelButton">Cancel</button>
+                        </div>
+                    </div>
+                    
+                </form>
+				  </div>
+                </div>                  
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" 
+            integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+            
+
+    <script>
+        // Add a script to handle the "Cancel" button click event
+        document.getElementById('cancelButton').addEventListener('click', function () {
+            // Redirect to the index page
+            window.location.href = '/';
+        });
+    </script>
+</body>
+</html>

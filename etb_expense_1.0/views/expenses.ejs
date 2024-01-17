@@ -1,0 +1,268 @@
+<!-- expense.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  <link rel="stylesheet" href="style.css">
+  <title>Document</title>
+</head>
+
+<body>
+  <nav>
+    <h5>Expense</h5>
+    <ul>
+      <li><a href="/logout">Logout</a></li>
+    </ul>
+  </nav>
+
+  <div id="sidebar" class="closed">
+    <% if (loggedIn === 'user') { %>
+    <a href="#" id="adminv">My View</a>
+    <ul id="adminop" style="display: none;">
+    <li><a href="/home"><img src="../images/home3.png" alt="Etb Image" style="max-width: 15px; max-height: 18px;"> &nbsp; Home</img> </a></li>
+    <li><a href="/expenses"><img src="../images/bill1.png" alt="Etb Image" style="max-width: 15px; max-height: 18px;"> &nbsp; Expenses</img> </a></li>
+    <li><a href="/reports"><img src="../images/report3.png" alt="Etb Image" style="max-width: 15px; max-height: 18px;"> &nbsp;Reports</img></a></li>
+    <li><a href="/advance"><img src="../images/wallet2.png" alt="Etb Image" style="max-width: 15px; max-height: 18px;"> &nbsp;Advance</img></a></li>
+    <li><a href="/approvals"><img src="../images/approval.png" alt="Etb Image" style="max-width: 15px; max-height: 18px;"> &nbsp;Approvals</img></a></li>
+    <li><a href="/analytics"><img src="../images/analytics.png" alt="Etb Image" style="max-width: 15px; max-height: 18px;"> &nbsp;Analytics</img></a></li>
+    <li><a href="/settings"><img src="../images/setting.png" alt="Etb Image" style="max-width: 15px; max-height: 18px;"> &nbsp;Setting</img></a> </li>
+    </ul>
+    <% } else if (loggedIn === 'admin') { %>
+      <ul>
+      <li> Admin View</li>
+      <li><a href="/userRole"><img src="../images/userRole.png" alt="Etb Image" style="max-width: 25px; max-height: 18px;"> &nbsp;User Role</img></a></li>
+      <li><a href="/expApprovals"><img src="../images/approval.png" alt="Etb Image" style="max-width: 15px; max-height: 18px;"> &nbsp;Expense Approvals</img> </a></li>
+      <li><a href="/approvalTabs"><img src="../images/approved.png" alt="Etb Image" style="max-width: 25px; max-height: 18px;"> &nbsp;Approvals Tab</img> </a></li>
+    </ul>
+  <% } %>
+</div>
+<div id="menu-toggle">&#9776;</div>
+
+  <!--Body-->
+  <div class="container-fluid1" id="content">
+    <div class="row" style="margin-top: 40px;">
+      <h2 style="font-weight:bold">EXPENSE</h2>
+      <img src="../images/budget.png" alt="Expenses Image" style="width: 15%; height: 30%;">
+      <div class="col-md-4" id="expenses">
+        <strong>
+          <p style="font-size: 25px">Explore Expenses.</p>
+        </strong>
+        <p>Record and manage your financial transactions effortlessly. Submit, categorize,
+          and track expenses for quick approval and accurate financial reporting.</p>
+        <!-- Button to Open Expenses Form in Modal -->
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newExpenseModal">New
+          Expenses</button>
+      </div>
+
+      <!-- Modal -->
+      <div class="modal fade" id="newExpenseModal" tabindex="-1" aria-labelledby="newExpenseModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" style="max-width: 360px;">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="newExpenseModalLabel">Expense Report</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <!-- Your form fields go here -->
+              <form class="expense" id="NewExpenseForm" action="/expenses/submit" method="POST"
+                enctype="multipart/form-data">
+
+                <div class="mb-3 row">
+                  <label for="report" class="col-sm-4 col-form-label">Report</label>
+                  <div class="col-sm-8">
+                    <!-- Select list for report_name values -->
+                    <select class="form-select" id="report" name="report" required>
+                      <option value="" selected disabled>Select Report</option>
+                      <% reportNames.forEach(reportName=> { %>
+                        <option value="<%= reportName %>">
+                          <%= reportName %>
+                        </option>
+                        <% }); %>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="mb-4 row">
+                  <label for="date" class="col-sm-4 col-form-label ">Date</label>
+                  <div class="col-sm-8 ">
+                    <input type="date" class="form-control" id="date" name="date" required>
+                  </div>
+                </div>
+
+
+
+                <div class="mb-3 row">
+                  <label for="category" class="col-sm-4 col-form-label">Category</label>
+                  <div class="col-sm-8">
+                    <input type="text" class="form-control" id="category" name="category" required>
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <label for="amount" class="col-sm-4 col-form-label">Amount</label>
+                  <div class="col-sm-8">
+                    <input type="text" class="form-control" id="amount" name="amount" required>
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <label for="description" class="col-sm-4 col-form-label">Description</label>
+                  <div class="col-sm-8">
+                    <textarea id="text" class="form-control" name="description" rows="4"></textarea>
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <label for="Reference" class="col-sm-4 col-form-label">Reference</label>
+                  <div class="col-sm-8">
+                    <input type="passwordConfirm" class="form-control" id="Reference" name="Reference">
+                  </div>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-primary">Submit Expenses</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- Add this section to display expenses in a grid -->
+      <h3 style="font-weight:bold; margin-top: 40px; margin-bottom: None;">Expenses Details:</h3>
+      <div class="row tbl-fixed">
+        <div class="col-md-12">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Report</th>
+                <th>Date</th>
+                <th>Category</th>
+                <th>Amount</th>
+                <th>Description</th>
+                <th>Reference</th>
+                <th>Created By</th>
+                <th>Creation Date</th>
+                <th>Last Updated By</th>
+                <th>Last Updated Date</th>
+                <th>Last Update Login</th>
+                <th>Status</th> <!-- Add Status column -->
+              </tr>
+            </thead>
+            <tbody>
+              <% allExpenses.forEach(expense=> { %>
+                <tr>
+                  <td>
+                    <%= expense.report %>
+                  </td>
+                  <td>
+                    <% if (expense.date && expense.date instanceof Date) { %>
+                      <%= expense.date.toISOString().split('T')[0] %>
+                        <% } else { %>
+                          N/A
+                          <% } %>
+                  </td>
+                  <td>
+                    <%= expense.category %>
+                  </td>
+                  <td>
+                    <%= expense.amount %>
+                  </td>
+                  <td>
+                    <%= expense.description %>
+                  </td>
+                  <td>
+                    <%= expense.Reference %>
+                  </td>
+                  <td>
+                    <%= expense.created_by %>
+                  </td>
+                  <td>
+                    <%= expense.creation_date.toISOString().split('T')[0] %>
+                  </td>
+                  <td>
+                    <%= expense.last_updated_by %>
+                  </td>
+                  <td>
+                    <%= expense.last_updated_date.toISOString().split('T')[0] %>
+                  </td>
+                  <td>
+                    <%= expense.last_update_login %>
+                  </td>
+                  <td>
+                    <%= expense.status || 'Pending' %>
+                  </td> <!-- Display the status, default to 'Pending' if not set -->
+                </tr>
+                <% }); %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+
+
+      <!-- Include Bootstrap JS and Popper.js -->
+      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"></script>
+      <script>
+        document.getElementById('menu-toggle').addEventListener('click', function () {
+          var sidebar = document.getElementById('sidebar');
+          var content = document.getElementById('content');
+          var adminList = document.getElementById('adminop');
+          var adminOptions = document.getElementById('adminOptions');
+
+          // Toggle the 'closed' class on the sidebar
+          sidebar.classList.toggle('closed');
+
+          // Toggle the 'open-sidebar' class on the content
+          content.classList.toggle('open-sidebar');
+
+          // Initially, hide adminOptions and show adminList
+          adminList.style.display = 'block';
+          adminOptions.style.display = 'none';
+        });
+
+        document.getElementById('adminView').addEventListener('click', function () {
+          var adminOptions = document.getElementById('adminOptions');
+          var adminList = document.getElementById('adminop');
+
+          // Hide admin list and display admin view list
+          adminList.style.display = 'none';
+          adminOptions.style.display = 'block';
+        });
+
+        document.getElementById('adminv').addEventListener('click', function () {
+          var adminOptions = document.getElementById('adminOptions');
+          var adminList = document.getElementById('adminop');
+
+          // Hide admin view list and display admin list
+          adminOptions.style.display = 'none';
+          adminList.style.display = 'block';
+        });
+      </script>
+      <script>
+        function NewExpense() {
+          // Show the Record Advance form
+          document.getElementById("NewExpenseForm").style.display = "block";
+        }
+
+        function cancelRecord() {
+          // Implement the logic to cancel and reset the form or navigate back
+          console.log('Canceling record');
+
+          // Reset the form
+          document.getElementById("NewExpenseForm").reset();
+
+          // Hide the form
+          document.getElementById("NewExpenseForm").style.display = "none";
+        }
+      </script>
+
+
+</body>
+
+</html>

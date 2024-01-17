@@ -1,0 +1,194 @@
+<!-- expApprovals.ejs -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+    <title>Document</title>
+</head>
+
+<body>
+    <nav>
+        <h5>Expense</h5>
+        <ul>
+            <li><a href="/logout">Logout</a></li>
+        </ul>
+    </nav>
+
+
+    <div id="sidebar" class="closed">
+      <% if (loggedIn === 'user') { %>
+      <a href="#" id="adminv">My View</a>
+      <ul id="adminop" style="display: none;">
+      <li><a href="/home"><img src="../images/home3.png" alt="Etb Image" style="max-width: 15px; max-height: 18px;"> &nbsp; Home</img> </a></li>
+      <li><a href="/expenses"><img src="../images/bill1.png" alt="Etb Image" style="max-width: 15px; max-height: 18px;"> &nbsp; Expenses</img> </a></li>
+      <li><a href="/reports"><img src="../images/report3.png" alt="Etb Image" style="max-width: 15px; max-height: 18px;"> &nbsp;Reports</img></a></li>
+      <li><a href="/advance"><img src="../images/wallet2.png" alt="Etb Image" style="max-width: 15px; max-height: 18px;"> &nbsp;Advance</img></a></li>
+      <li><a href="/approvals"><img src="../images/approval.png" alt="Etb Image" style="max-width: 15px; max-height: 18px;"> &nbsp;Approvals</img></a></li>
+      <li><a href="/analytics"><img src="../images/analytics.png" alt="Etb Image" style="max-width: 15px; max-height: 18px;"> &nbsp;Analytics</img></a></li>
+      <li><a href="/settings"><img src="../images/setting.png" alt="Etb Image" style="max-width: 15px; max-height: 18px;"> &nbsp;Setting</img></a> </li>
+      </ul>
+      <% } else if (loggedIn === 'admin') { %>
+        <ul>
+        <li> Admin View</li>
+        <li><a href="/userRole"><img src="../images/userRole.png" alt="Etb Image" style="max-width: 25px; max-height: 18px;"> &nbsp;User Role</img></a></li>
+        <li><a href="/expApprovals"><img src="../images/approval.png" alt="Etb Image" style="max-width: 15px; max-height: 18px;"> &nbsp;Expense Approvals</img> </a></li>
+        <li><a href="/approvalTabs"><img src="../images/approved.png" alt="Etb Image" style="max-width: 25px; max-height: 18px;"> &nbsp;Approvals Tab</img> </a></li>
+      </ul>
+    <% } %>
+  </div>
+  <div id="menu-toggle">&#9776;</div>
+
+
+    <h1>Expense Approval</h1>
+  <div class="container-fuild tbl-container tbl-fixed1 " id="content">
+    <div class="row">
+  
+  <table class="table ">
+    <thead>
+      <tr>
+        <th>Report</th>
+        <th>Date</th>
+        <th>Category</th>
+        <th>Amount</th>
+        <th>Description</th>
+        <th>Reference</th>
+        <th>Created By</th>
+        <th>Creation Date</th>
+        <th>Last Updated By</th>
+        <th>Last Updated Date</th>
+        <th>Last Update Login</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% allExpenses.forEach(expense => { %>
+        <tr data-expense-id="<%= expense._id %>" class="<%= (expense.status === 'approved' || expense.status === 'rejected') ? 'hidden-row' : '' %>">
+        <tr>
+          <td><%= expense.report %></td>
+          <td>
+            <% if (expense.date && expense.date instanceof Date) { %>
+              <%= expense.date.toISOString().split('T')[0] %>
+            <% } else { %>
+              N/A
+            <% } %>
+          </td>
+          <td><%= expense.category %></td>
+          <td><%= expense.amount %></td>
+          <td><%= expense.description %></td>
+          <td><%= expense.Reference %></td>
+          <td><%= expense.created_by %></td>
+          <td><%= expense.creation_date.toISOString().split('T')[0] %></td>
+          <td><%= expense.last_updated_by %></td>
+          <td><%= expense.last_updated_date.toISOString().split('T')[0] %></td>
+          <td><%= expense.last_update_login %></td>
+          <td>
+            <form action="/approve" method="post" style="display: inline;">
+              <input type="hidden" name="expenseId" value="<%= expense._id %>">
+              <button type="submit" style="font-size: 14px;">Approve</button>
+            </form>
+           
+            <form action="/reject" method="post" style="display: inline;">
+              <input type="hidden" name="expenseId" value="<%= expense._id %>">
+              <button type="submit" style="background-color:red;font-size: 14px;">Reject</button>
+            </form>
+          </td>
+        </tr>
+      <% }); %>
+    </tbody>
+  </table>
+</div>
+</div>
+
+   <!-- Include Bootstrap JS and Popper.js -->
+   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"></script>
+ 
+   <script>
+    document.getElementById('menu-toggle').addEventListener('click', function () {
+        var sidebar = document.getElementById('sidebar');
+        var content = document.getElementById('content');
+        var adminList = document.getElementById('adminop');
+        var adminOptions = document.getElementById('adminOptions');
+
+        // Toggle the 'closed' class on the sidebar
+        sidebar.classList.toggle('closed');
+
+        // Toggle the 'open-sidebar' class on the content
+        content.classList.toggle('open-sidebar');
+
+        // Initially, hide adminOptions and show adminList
+        adminList.style.display = 'block';
+        adminOptions.style.display = 'none';
+    });
+
+    document.getElementById('adminView').addEventListener('click', function () {
+        var adminOptions = document.getElementById('adminOptions');
+        var adminList = document.getElementById('adminop');
+
+        // Hide admin list and display admin view list
+        adminList.style.display = 'none';
+        adminOptions.style.display = 'block';
+    });
+
+    document.getElementById('adminv').addEventListener('click', function () {
+        var adminOptions = document.getElementById('adminOptions');
+        var adminList = document.getElementById('adminop');
+
+        // Hide admin view list and display admin list
+        adminOptions.style.display = 'none';
+        adminList.style.display = 'block';
+    });
+</script>
+    <script>
+       window.addEventListener('load', function () {
+      document.addEventListener('DOMContentLoaded', function () {
+          // Add an event listener to all forms with the class 'approval-form'
+          document.querySelectorAll('.approval-form').forEach(function (form) {
+              form.addEventListener('submit', function (event) {
+                  event.preventDefault(); // Prevent the default form submission
+  
+                  var expenseId = form.querySelector('input[name="expenseId"]').value;
+  
+                  // Perform an AJAX request to update the approval status on the server
+                  // Assume that the server returns a response with the updated status
+                  // Replace the following code with your actual AJAX implementation
+  
+                  // Example AJAX request using fetch
+                  fetch('/approve', {
+                      method: 'post',
+                      body: new URLSearchParams({
+                          expenseId: expenseId,
+                      }),
+                      headers: {
+                          'Content-Type': 'application/x-www-form-urlencoded',
+                      },
+                  })
+                  .then(function (response) {
+                      return response.json(); // Assuming the server responds with JSON
+                  })
+                  .then(function (data) {
+                      // Check the updated status and hide the row if necessary
+                      if (data.status === 'approved' || data.status === 'rejected') {
+                          // Find the row by expenseId and add the 'hidden-row' class
+                          var row = document.querySelector('tr[data-expense-id="' + expenseId + '"]');
+                          if (row) {
+                              row.style.display = 'none';
+                          }
+                      }
+                  })
+                  .catch(function (error) {
+                      console.error('Error:', error);
+                  });
+              });
+          });
+      });
+    });
+  </script>
+  
+</body>
+</html>
